@@ -4,165 +4,205 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mental Math Game!</title>
+
 <style>
-/* ---------- Body and general layout ---------- */
+/* ---------- Global layout ---------- */
 body {
     font-family: 'Comic Sans MS', cursive, sans-serif;
-    background: linear-gradient(to bottom right, #ff9a9e, #fad0c4, #fad0c4);
+    background: linear-gradient(to bottom right, #ff9a9e, #fad0c4);
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 12px;
     color: #333;
+    overflow-x: hidden;
 }
 
-/* ---------- Main title ---------- */
+/* ---------- Title ---------- */
 h1 {
-    margin-top: 20px;
-    font-size: 3em;
+    font-size: 2.4em;
     color: #ff5722;
-    text-shadow: 3px 3px #fff;
-    text-align: center;
+    text-shadow: 2px 2px #fff;
+    margin-bottom: 8px;
 }
 
-/* ---------- Card styles ---------- */
+/* ---------- Compact cards ---------- */
 .card {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px 25px;
-    border-radius: 25px;
+    background: rgba(255,255,255,0.92);
+    padding: 12px 16px;
+    border-radius: 18px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.18);
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
-.problem-card {
-    font-size: 2.5em;
+/* ---------- Problem ---------- */
+.problem {
+    font-size: 2.2em;
     font-weight: bold;
     color: #ff5722;
-    text-align: center;
 }
 
-/* ---------- Input and button ---------- */
+/* ---------- Inputs & buttons ---------- */
 select, button, input[type="number"] {
-    font-size: 1.2em;
-    padding: 12px 18px;
-    border-radius: 15px;
+    font-size: 1.1em;
+    padding: 8px 10px;
+    border-radius: 8px;
     border: none;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 button {
     background: linear-gradient(45deg, #ff9800, #ffcc80);
     color: white;
     font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
 }
 
-button:hover {
-    transform: scale(1.15);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+button:active {
+    transform: scale(0.95);
 }
 
 input[type="number"] {
+    width: 110px;
     border: 3px solid #ff5722;
-    width: 120px;
     text-align: center;
     font-weight: bold;
-    position: relative;
 }
 
 /* ---------- Feedback bubble ---------- */
-.feedback-bubble {
-    position: relative;
-    bottom: 0;
-    font-size: 1.5em;
-    min-height: 40px;
+.feedback {
+    font-size: 1.4em;
     font-weight: bold;
-    text-align: center;
-    padding: 10px 20px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    display: inline-block;
+    min-height: 36px;
+    padding: 6px 14px;
+    border-radius: 16px;
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
-/* Correct feedback bubble */
-.feedback-bubble.correct {
-    background-color: #4caf50;
+.feedback.correct {
+    background: #4caf50;
     color: white;
     opacity: 1;
-    transform: translateY(-10px);
-    animation: bounce 0.5s;
+    animation: bounce 0.4s;
 }
 
-/* Wrong feedback bubble */
-.feedback-bubble.wrong {
-    background-color: #f44336;
+.feedback.wrong {
+    background: #f44336;
     color: white;
     opacity: 1;
-    transform: translateY(-10px);
-    animation: shake 0.3s;
+    animation: shake 0.25s;
+}
+
+/* ---------- Score ---------- */
+.score-board {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+/* ---------- Star animation ---------- */
+.star {
+    position: fixed;
+    font-size: 1.8em;
+    animation: fly 0.9s ease-out forwards;
+    pointer-events: none;
 }
 
 /* ---------- Animations ---------- */
 @keyframes bounce {
-    0% { transform: translateY(-10px) scale(1); }
-    50% { transform: translateY(-20px) scale(1.3); }
-    100% { transform: translateY(-10px) scale(1); }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
 }
 
 @keyframes shake {
     0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-4px); }
     100% { transform: translateX(0); }
+}
+
+@keyframes fly {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-100px) scale(1.6); }
 }
 </style>
 </head>
+
 <body>
 
 <h1>Mental Math Game!</h1>
 
-<!-- Controls card -->
+<div class="score-board">
+    ⭐ Score: <span id="score">0</span>
+    &nbsp;|&nbsp;
+    🔥 Combo: <span id="combo">0</span>
+</div>
+
 <div class="card">
-    <label for="difficulty">Choose difficulty:</label>
+    <label>Difficulty:</label>
     <select id="difficulty">
         <option value="1">1-digit</option>
         <option value="2">2-digit</option>
     </select>
-    <button onclick="generateProblem()">New Problem</button>
+    <button onclick="generateProblem()">New</button>
 </div>
 
-<!-- Problem display -->
-<div class="problem-card" id="problem">Press "New Problem" to start!</div>
+<div class="problem" id="problem">Loading...</div>
 
-<!-- Answer input -->
-<div class="card" style="flex-direction: column; align-items: center;">
-    <!-- Feedback bubble appears above input -->
-    <div class="feedback-bubble" id="feedback"></div>
-    <input type="number" id="answerInput" placeholder="Your answer">
-    <button onclick="checkAnswer()" style="margin-top:10px;">Check</button>
+<div class="card" style="flex-direction:column;">
+    <div class="feedback" id="feedback"></div>
+    <input type="number" id="answerInput" placeholder="Answer">
+    <button onclick="checkAnswer()">Check</button>
 </div>
 
 <script>
-// ---------- Variables ----------
-let currentAnswer = 0;
+/* ---------- Game state ---------- */
+let correctAnswer = 0;
+let score = 0;
+let combo = 0;
 
-// ---------- Generate a new problem ----------
+/* ---------- Audio context ---------- */
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+/* ---------- Sound effects ---------- */
+function playCorrectSound() {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = 880;
+    gain.gain.value = 0.12;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.15);
+}
+
+function playWrongSound() {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.value = 220;
+    gain.gain.value = 0.1;
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.18);
+}
+
+/* ---------- Generate problem ---------- */
 function generateProblem() {
-    const difficulty = parseInt(document.getElementById('difficulty').value);
+    const level = parseInt(document.getElementById('difficulty').value);
     let a, b;
 
-    // Random numbers based on difficulty
-    if (difficulty === 1) {
+    if (level === 1) {
         a = Math.floor(Math.random() * 9) + 1;
         b = Math.floor(Math.random() * 9) + 1;
     } else {
@@ -170,63 +210,84 @@ function generateProblem() {
         b = Math.floor(Math.random() * 90) + 10;
     }
 
-    // Random operator
     const operators = ['+', '-'];
-    let op = operators[Math.floor(Math.random() * operators.length)];
+    let op = operators[Math.floor(Math.random() * 2)];
 
-    // Make sure subtraction does not produce negative numbers
     if (op === '-' && b > a) {
         [a, b] = [b, a];
     }
 
-    currentAnswer = op === '+' ? a + b : a - b;
-
-    // Display problem
+    correctAnswer = op === '+' ? a + b : a - b;
     document.getElementById('problem').textContent = `${a} ${op} ${b} = ?`;
 
-    // Clear and focus input
-    const inputBox = document.getElementById('answerInput');
-    inputBox.value = '';
-    inputBox.focus();
+    const input = document.getElementById('answerInput');
+    input.value = '';
+    input.focus();
 
-    // Reset feedback
-    const feedback = document.getElementById('feedback');
-    feedback.textContent = '';
-    feedback.className = 'feedback-bubble';
+    resetFeedback();
 }
 
-// ---------- Check the user's answer ----------
+/* ---------- Check answer ---------- */
 function checkAnswer() {
     const userAnswer = parseInt(document.getElementById('answerInput').value);
-    const feedback = document.getElementById('feedback');
-    const emojis = ['🎉','✨','⭐','👍','💪','🎈','👏','😃'];
 
-    if (userAnswer === currentAnswer) {
-        // Random encouragement with emoji
-        const encouragements = [
-            "Great job!",
-            "Awesome!",
-            "You're a math star!",
-            "Keep it up!",
-            "Fantastic!",
-            "Wow! Amazing!"
-        ];
-        const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
-        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-        feedback.textContent = msg + " " + emoji;
-        feedback.className = 'feedback-bubble correct';
-
-        // Automatically generate next problem after short delay
-        setTimeout(generateProblem, 1000);
-
+    if (userAnswer === correctAnswer) {
+        score++;
+        combo++;
+        updateScore();
+        playCorrectSound();
+        showStars();
+        showFeedback(true);
+        setTimeout(generateProblem, 700);
     } else {
-        feedback.textContent = "Oops! Try again! ❌";
-        feedback.className = 'feedback-bubble wrong';
+        combo = 0;
+        updateScore();
+        playWrongSound();
+        showFeedback(false);
         document.getElementById('answerInput').focus();
     }
 }
 
-// ---------- Generate first problem on page load ----------
+/* ---------- Feedback ---------- */
+function showFeedback(correct) {
+    const feedback = document.getElementById('feedback');
+    const emojis = ['🎉','⭐','👏','✨','😃'];
+
+    if (correct) {
+        feedback.textContent = "Great job! " + emojis[Math.floor(Math.random()*emojis.length)];
+        feedback.className = 'feedback correct';
+    } else {
+        feedback.textContent = "Try again!";
+        feedback.className = 'feedback wrong';
+    }
+}
+
+function resetFeedback() {
+    const feedback = document.getElementById('feedback');
+    feedback.textContent = '';
+    feedback.className = 'feedback';
+}
+
+/* ---------- Score ---------- */
+function updateScore() {
+    document.getElementById('score').textContent = score;
+    document.getElementById('combo').textContent = combo;
+}
+
+/* ---------- Star reward ---------- */
+function showStars() {
+    for (let i = 0; i < 2; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.textContent = '⭐';
+        star.style.left = Math.random() * window.innerWidth + 'px';
+        star.style.top = '65%';
+        document.body.appendChild(star);
+        setTimeout(() => star.remove(), 900);
+    }
+}
+
+/* ---------- Start ---------- */
 window.onload = generateProblem;
 </script>
 
