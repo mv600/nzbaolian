@@ -1,210 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Next-Gen Web Experience</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Math Game!</title>
 <style>
-:root {
-  --bg: #0b0f1a;
-  --card: #12182a;
-  --primary: #4f9cff;
-  --accent: #00ffd5;
-  --text: #e6e9f0;
-  --muted: #9aa3b2;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+/* ---------- Body and general layout ---------- */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: radial-gradient(circle at top, #10162b, var(--bg));
-  color: var(--text);
-  line-height: 1.6;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(to bottom right, #ff9a9e, #fad0c4, #fad0c4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
 }
 
-/* ===== Hero ===== */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 80px 20px;
+/* ---------- Main title ---------- */
+h1 {
+    margin-top: 20px;
+    font-size: 3em;
+    color: #ff5722;
+    text-shadow: 3px 3px #fff;
+    text-align: center;
 }
 
-.hero h1 {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.hero h1 span {
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.hero p {
-  max-width: 640px;
-  margin: 24px auto 40px;
-  font-size: 1.1rem;
-  color: var(--muted);
-}
-
-.hero button {
-  padding: 14px 36px;
-  border-radius: 999px;
-  border: none;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  color: #000;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.hero button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0,255,213,0.35);
-}
-
-/* ===== Section ===== */
-.section {
-  padding: 100px 20px;
-  max-width: 1200px;
-  margin: auto;
-}
-
-.section-title {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.section-title h2 {
-  font-size: 2.4rem;
-}
-
-.section-title p {
-  margin-top: 12px;
-  color: var(--muted);
-}
-
-/* ===== Cards ===== */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
-}
-
+/* ---------- Card styles ---------- */
 .card {
-  background: linear-gradient(180deg, var(--card), rgba(18,24,42,0.7));
-  border-radius: 20px;
-  padding: 32px;
-  border: 1px solid rgba(255,255,255,0.06);
-  transition: transform 0.25s, border-color 0.25s;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px 25px;
+    border-radius: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
-.card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(79,156,255,0.5);
+.problem-card {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #ff5722;
+    text-align: center;
 }
 
-.card h3 {
-  margin-bottom: 12px;
-  font-size: 1.3rem;
+/* ---------- Input and button ---------- */
+select, button, input[type="number"] {
+    font-size: 1.2em;
+    padding: 12px 18px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.card p {
-  color: var(--muted);
-  font-size: 0.95rem;
+button {
+    background: linear-gradient(45deg, #ff9800, #ffcc80);
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* ===== CTA ===== */
-.cta {
-  text-align: center;
-  padding: 120px 20px;
-  background: linear-gradient(180deg, transparent, #0e1424);
+button:hover {
+    transform: scale(1.15);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
-.cta h2 {
-  font-size: 2.6rem;
-  margin-bottom: 20px;
+input[type="number"] {
+    border: 3px solid #ff5722;
+    width: 120px;
+    text-align: center;
+    font-weight: bold;
+    position: relative;
 }
 
-.cta p {
-  max-width: 600px;
-  margin: auto;
-  color: var(--muted);
+/* ---------- Feedback bubble ---------- */
+.feedback-bubble {
+    position: relative;
+    bottom: 0;
+    font-size: 1.5em;
+    min-height: 40px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    display: inline-block;
+    opacity: 0;
+    transition: all 0.3s ease;
 }
 
-.cta a {
-  display: inline-block;
-  margin-top: 40px;
-  padding: 14px 42px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.2);
-  color: var(--text);
-  text-decoration: none;
-  transition: background 0.25s, box-shadow 0.25s;
+/* Correct feedback bubble */
+.feedback-bubble.correct {
+    background-color: #4caf50;
+    color: white;
+    opacity: 1;
+    transform: translateY(-10px);
+    animation: bounce 0.5s;
 }
 
-.cta a:hover {
-  background: rgba(79,156,255,0.15);
-  box-shadow: 0 0 0 6px rgba(79,156,255,0.15);
+/* Wrong feedback bubble */
+.feedback-bubble.wrong {
+    background-color: #f44336;
+    color: white;
+    opacity: 1;
+    transform: translateY(-10px);
+    animation: shake 0.3s;
+}
+
+/* ---------- Animations ---------- */
+@keyframes bounce {
+    0% { transform: translateY(-10px) scale(1); }
+    50% { transform: translateY(-20px) scale(1.3); }
+    100% { transform: translateY(-10px) scale(1); }
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
 }
 </style>
 </head>
-
 <body>
 
-<section class="hero">
-  <div>
-    <h1>Build the <span>Future</span><br/>of the Web</h1>
-    <p>
-      A next-generation digital experience crafted with performance,
-      elegance, and scalability in mind.
-    </p>
-    <button>Get Started</button>
-  </div>
-</section>
+<h1>Mental Math Game!</h1>
 
-<section class="section">
-  <div class="section-title">
-    <h2>Why Choose Us</h2>
-    <p>Designed for creators, developers, and forward-thinking teams</p>
-  </div>
+<!-- Controls card -->
+<div class="card">
+    <label for="difficulty">Choose difficulty:</label>
+    <select id="difficulty">
+        <option value="1">1-digit</option>
+        <option value="2">2-digit</option>
+    </select>
+    <button onclick="generateProblem()">New Problem</button>
+</div>
 
-  <div class="grid">
-    <div class="card">
-      <h3>⚡ Lightning Fast</h3>
-      <p>Optimized rendering and clean architecture deliver blazing-fast load times.</p>
-    </div>
+<!-- Problem display -->
+<div class="problem-card" id="problem">Press "New Problem" to start!</div>
 
-    <div class="card">
-      <h3>🎨 Elegant Design</h3>
-      <p>Minimalist aesthetics combined with bold typography for maximum impact.</p>
-    </div>
+<!-- Answer input -->
+<div class="card" style="flex-direction: column; align-items: center;">
+    <!-- Feedback bubble appears above input -->
+    <div class="feedback-bubble" id="feedback"></div>
+    <input type="number" id="answerInput" placeholder="Your answer">
+    <button onclick="checkAnswer()" style="margin-top:10px;">Check</button>
+</div>
 
-    <div class="card">
-      <h3>🔒 Built to Scale</h3>
-      <p>Engineered with modern best practices to grow with your product.</p>
-    </div>
-  </div>
-</section>
+<script>
+// ---------- Variables ----------
+let currentAnswer = 0;
 
-<section class="cta">
-  <h2>Ready to Create Something Exceptional?</h2>
-  <p>
-    Transform your idea into a powerful digital presence.
-    Start building today.
-  </p>
-  <a href="#">Launch Your Project</a>
-</section>
+// ---------- Generate a new problem ----------
+function generateProblem() {
+    const difficulty = parseInt(document.getElementById('difficulty').value);
+    let a, b;
+
+    // Random numbers based on difficulty
+    if (difficulty === 1) {
+        a = Math.floor(Math.random() * 9) + 1;
+        b = Math.floor(Math.random() * 9) + 1;
+    } else {
+        a = Math.floor(Math.random() * 90) + 10;
+        b = Math.floor(Math.random() * 90) + 10;
+    }
+
+    // Random operator
+    const operators = ['+', '-'];
+    let op = operators[Math.floor(Math.random() * operators.length)];
+
+    // Make sure subtraction does not produce negative numbers
+    if (op === '-' && b > a) {
+        [a, b] = [b, a];
+    }
+
+    currentAnswer = op === '+' ? a + b : a - b;
+
+    // Display problem
+    document.getElementById('problem').textContent = `${a} ${op} ${b} = ?`;
+
+    // Clear and focus input
+    const inputBox = document.getElementById('answerInput');
+    inputBox.value = '';
+    inputBox.focus();
+
+    // Reset feedback
+    const feedback = document.getElementById('feedback');
+    feedback.textContent = '';
+    feedback.className = 'feedback-bubble';
+}
+
+// ---------- Check the user's answer ----------
+function checkAnswer() {
+    const userAnswer = parseInt(document.getElementById('answerInput').value);
+    const feedback = document.getElementById('feedback');
+    const emojis = ['🎉','✨','⭐','👍','💪','🎈','👏','😃'];
+
+    if (userAnswer === currentAnswer) {
+        // Random encouragement with emoji
+        const encouragements = [
+            "Great job!",
+            "Awesome!",
+            "You're a math star!",
+            "Keep it up!",
+            "Fantastic!",
+            "Wow! Amazing!"
+        ];
+        const msg = encouragements[Math.floor(Math.random() * encouragements.length)];
+        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+        feedback.textContent = msg + " " + emoji;
+        feedback.className = 'feedback-bubble correct';
+
+        // Automatically generate next problem after short delay
+        setTimeout(generateProblem, 1000);
+
+    } else {
+        feedback.textContent = "Oops! Try again! ❌";
+        feedback.className = 'feedback-bubble wrong';
+        document.getElementById('answerInput').focus();
+    }
+}
+
+// ---------- Generate first problem on page load ----------
+window.onload = generateProblem;
+</script>
 
 </body>
 </html>
